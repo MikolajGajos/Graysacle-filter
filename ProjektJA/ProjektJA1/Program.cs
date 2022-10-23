@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Drawing;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 
 namespace ProjektJA
 {
@@ -19,8 +17,14 @@ namespace ProjektJA
             Console.WriteLine(GreyScaleASM(1, 2));
             Console.WriteLine(GreyScaleC(22, 2));
 
-            GreyScaleManager test = new GreyScaleManager();
-            test.Test(2);
+            Bitmap bmp = new Bitmap(@"D:\dupa\eo.bmp");
+            for (int i = 0; i < bmp.Width; i++)
+            {
+                bmp.SetPixel(i, 0, Color.Blue);
+                bmp.SetPixel(i, 1, Color.Red);
+            }
+            bmp.Save(@"D:\dupa\xd.bmp");
+
 
             Console.ReadLine();
         }
