@@ -1,6 +1,6 @@
 .code
 GreyScaleASM proc
-sub RCX, RDX
+add RCX, RDX
 mov RAX, RCX
 ret
 GreyScaleASM endp
