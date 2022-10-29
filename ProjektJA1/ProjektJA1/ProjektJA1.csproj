@@ -33,7 +33,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="GreyScale.cs" />
+    <Compile Include="GreyScaleManager.cs" />
+    <Compile Include="Language.cs" />
+    <Compile Include="Mechanism\BitmapManager.cs" />
+    <Compile Include="Mechanism\GrayScaleASM.cs" />
+    <Compile Include="Mechanism\GrayScaleC.cs" />
+    <Compile Include="Mechanism\GrayScaleInterface.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
