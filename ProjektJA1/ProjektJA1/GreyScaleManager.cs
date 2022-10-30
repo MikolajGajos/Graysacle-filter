@@ -11,7 +11,7 @@ namespace ProjektJA
     {
         private List<Task> tasks = new List<Task>();
         private int numOfTasks;
-        private Bitmap bitmap;
+        private float[] pixels;
         private GrayScaleInterface mechanism;
 
         private void SelectMechanism(Language language)
@@ -30,14 +30,14 @@ namespace ProjektJA
             }
         }
 
-        public GrayScaleManager(int numOfTasks, ref Bitmap bitmap, Language language)
+        public GrayScaleManager(int numOfTasks, ref float[] pixels, Language language)
         {
             this.numOfTasks = numOfTasks;
-            this.bitmap = bitmap;
+            this.pixels = pixels;
             SelectMechanism(language);
         }
 
-        private void AddTasks(float[] pixels)
+        private void AddTasks()
         {
             int sectionSize = pixels.Length / numOfTasks;
             for (int i = 0; i < numOfTasks; i++)
@@ -50,10 +50,8 @@ namespace ProjektJA
 
         public void ExecuteEffect()
         {           
-            float[] pixels = BitmapManager.BitmapToFloat(bitmap);
-
             //
-            AddTasks(pixels);;
+            AddTasks();;
 
             Stopwatch sw = new Stopwatch();
             sw.Start();
@@ -62,11 +60,10 @@ namespace ProjektJA
             Task.WaitAll(tasks.ToArray());
 
             sw.Stop();
-            Console.WriteLine("Elapsed={0}", sw.Elapsed);
-            Console.ReadLine();
+            Console.WriteLine("Time in miliseconds: " + sw.Elapsed.Milliseconds);
             //
 
-            BitmapManager.FloatToBitmap(ref pixels, ref bitmap);
+            Console.ReadLine();
         }
     }
 }

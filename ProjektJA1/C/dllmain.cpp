@@ -1,13 +1,13 @@
 ﻿// dllmain.cpp : Defines the entry point for the DLL application.
 #include "pch.h"
 
-extern "C" __declspec(dllexport) void GreyScaleCFunc(float* pixels, int beg, int end, int size)
+void GrayScale(float* pixels, int beg, int end)
 {
-    for (int i = 0; i < size; i += 3)
+    for (int i = beg; i < end; i += 4)
     {
-        float r = pixels[i];
+        float b = pixels[i];
         float g = pixels[i + 1];
-        float b = pixels[i + 2];
+        float r = pixels[i + 2];
 
         float avg = (r + g + b) / 3;
 
@@ -15,6 +15,12 @@ extern "C" __declspec(dllexport) void GreyScaleCFunc(float* pixels, int beg, int
         pixels[i + 1] = avg;
         pixels[i + 2] = avg;
     }
+}
+
+
+extern "C" __declspec(dllexport) void GreyScaleCFunc(float* pixels, int beg, int end)
+{
+    GrayScale(pixels, beg, end);
 }
 
 BOOL APIENTRY DllMain( HMODULE hModule,

@@ -2,59 +2,75 @@
 using Color = System.Drawing.Color;
 using System.Drawing.Imaging;
 using System.IO;
+using System;
+using System.Windows.Media.Imaging;
+using System.Windows.Ink;
+using System.Windows;
+using System.Runtime.CompilerServices;
 
 namespace ProjektJA.Mechanism
 {
-    internal static class BitmapManager
+    internal class BitmapManager
     {
-        //private byte[] ImageToByte(Image img)
-        //{
-        //    ImageConverter converter = new ImageConverter();
-        //    return (byte[])converter.ConvertTo(img, typeof(byte[]));
-        //}
+        private static BitmapSource bitmapSource;
 
-        private static byte[] ImageToByte(this Image image, ImageFormat format)
+        private static float[] ByteToFloat(byte[] bytePixles)
         {
-            using (MemoryStream ms = new MemoryStream())
+            float[] result = new float[bytePixles.Length];
+            for (int i = 0; i < bytePixles.Length; i++)
             {
-                image.Save(ms, format);
-                return ms.ToArray();
+                result[i] = bytePixles[i];
+            }
+            return result;
+        }
+
+        private static byte[] FloatToByte(float[] floatPixles)
+        {
+            byte[] result = new byte[floatPixles.Length];
+            for (int i = 0; i < floatPixles.Length; i++)
+            {
+                result[i] = (byte)floatPixles[i];
+            }
+            return result;
+        }
+
+        private static float[] saveToArray()
+        {
+            int stride = bitmapSource.PixelWidth * (bitmapSource.Format.BitsPerPixel / 8);
+            byte[] pixlesByte = new byte[bitmapSource.PixelHeight * stride];
+            bitmapSource.CopyPixels(pixlesByte, stride, 0);
+            return ByteToFloat(pixlesByte);
+        }
+
+        public static float[] loadToArray(string path)
+        {
+            bitmapSource = new BitmapImage(new System.Uri(path));
+            return saveToArray();
+        }
+
+        private static WriteableBitmap saveToWritablebitap(ref float[] pixels)
+        {
+            byte[] bytes = FloatToByte(pixels);
+            int stride = bitmapSource.PixelWidth * (bitmapSource.Format.BitsPerPixel / 8);
+            WriteableBitmap writeableBitmap = new WriteableBitmap(bitmapSource.PixelWidth, bitmapSource.PixelHeight, 96, 96, bitmapSource.Format, null);
+            writeableBitmap.WritePixels(new Int32Rect(0, 0, bitmapSource.PixelWidth, bitmapSource.PixelHeight), bytes, stride, 0);
+            return writeableBitmap;
+        }
+
+        private static void Export(string path)
+        {
+            using (var fileStream = new FileStream(path, FileMode.Create))
+            {
+                BitmapEncoder encoder = new BmpBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
+                encoder.Save(fileStream);
             }
         }
 
-        private static float[] ByteArrToFloat(ref byte[] byteArray)
+        public static void saveBitmap(ref float[] pixels, string pat)
         {
-            float[] floatArray = new float[byteArray.Length];
-            for (int i = 0; i < floatArray.Length; i++)
-            {
-                floatArray[i] = (float)byteArray[i];
-            }
-            return floatArray;
-        }        
-
-        public static float[] BitmapToFloat(this Bitmap bitmap)
-        {
-            byte[] byteArray = ImageToByte(bitmap, ImageFormat.Bmp);
-            return ByteArrToFloat(ref byteArray);
+            bitmapSource = saveToWritablebitap(ref pixels);
+            Export(pat);
         }
-
-        private static void UpdatePixsels(ref float[] pixels, ref Bitmap bitmap)
-        {
-            int i = 54;
-            for (int y = bitmap.Height - 1; y >= 0; y--)
-            {
-                for (int x = 0; x < bitmap.Width; x++, i += 3)
-                {
-                    Color color = Color.FromArgb((int)pixels[i], (int)pixels[i + 1], (int)pixels[i + 2]);
-                    bitmap.SetPixel(x, y, color);
-                }
-            }
-        }
-
-        public static void FloatToBitmap(ref float[] pixels, ref Bitmap bitmap)
-        {
-            UpdatePixsels(ref pixels, ref bitmap);
-        }
-
     }
 }
