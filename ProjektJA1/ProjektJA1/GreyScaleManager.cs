@@ -39,6 +39,7 @@ namespace ProjektJA
 
         private void AddTasks()
         {
+            tasks.Clear();
             int sectionSize = pixels.Length / numOfTasks;
             for (int i = 0; i < numOfTasks; i++)
             {
@@ -49,9 +50,26 @@ namespace ProjektJA
         }
 
         public void ExecuteEffect()
-        {           
-            //
-            AddTasks();;
+        {
+            //float[] meanTime = new float[20];
+            //for (int i = 0; i < 20; i++)
+            //{
+            //    AddTasks();
+
+            //    Stopwatch sw = new Stopwatch();
+            //    sw.Start();
+
+            //    Parallel.ForEach(tasks, (task) => task.Start());
+            //    Task.WaitAll(tasks.ToArray());
+
+            //    sw.Stop();
+            //    meanTime[i] = sw.Elapsed.Ticks;
+            //}
+            //Array.Sort(meanTime);
+
+            //Console.WriteLine("Ticks: " + meanTime[10]);
+
+            AddTasks();
 
             Stopwatch sw = new Stopwatch();
             sw.Start();
@@ -60,10 +78,7 @@ namespace ProjektJA
             Task.WaitAll(tasks.ToArray());
 
             sw.Stop();
-            Console.WriteLine("Time in miliseconds: " + sw.Elapsed.Milliseconds);
-            //
-
-            Console.ReadLine();
+            Console.WriteLine(sw.Elapsed.Ticks);
         }
     }
 }

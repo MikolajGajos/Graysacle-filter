@@ -72,10 +72,13 @@ namespace ProjektJA
         {
             float[] pixels = BitmapManager.loadToArray(@"D:\dupa\eo.bmp");
 
-            GrayScaleManager manager = new GrayScaleManager(8, ref pixels, Language.C);
+            GrayScaleManager manager = new GrayScaleManager(1, ref pixels, Language.ASM);
             manager.ExecuteEffect();
 
             BitmapManager.saveBitmap(ref pixels, @"D:\dupa\xd.bmp");
+
+            Console.ReadLine();
+
         }   
     }
 }
