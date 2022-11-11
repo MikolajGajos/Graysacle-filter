@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-
-namespace ProjektJA.Mechanism
+﻿namespace ProjektJA.Mechanism
 {
     public abstract class GrayScaleInterface
     {

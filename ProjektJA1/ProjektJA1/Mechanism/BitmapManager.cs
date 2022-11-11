@@ -1,12 +1,6 @@
-﻿using System.Drawing;
-using Color = System.Drawing.Color;
-using System.Drawing.Imaging;
-using System.IO;
-using System;
+﻿using System.IO;
 using System.Windows.Media.Imaging;
-using System.Windows.Ink;
 using System.Windows;
-using System.Runtime.CompilerServices;
 
 namespace ProjektJA.Mechanism
 {
@@ -17,9 +11,9 @@ namespace ProjektJA.Mechanism
         private static byte[] SaveToArray()
         {
             int stride = bitmapSource.PixelWidth * (bitmapSource.Format.BitsPerPixel / 8);
-            byte[] pixlesByte = new byte[bitmapSource.PixelHeight * stride];
-            bitmapSource.CopyPixels(pixlesByte, stride, 0);
-            return pixlesByte;
+            byte[] pixels = new byte[bitmapSource.PixelHeight * stride];
+            bitmapSource.CopyPixels(pixels, stride, 0);
+            return pixels;
         }
 
         public static byte[] LoadToArray(string path)
