@@ -14,46 +14,25 @@ namespace ProjektJA.Mechanism
     {
         private static BitmapSource bitmapSource;
 
-        private static float[] ByteToFloat(byte[] bytePixles)
-        {
-            float[] result = new float[bytePixles.Length];
-            for (int i = 0; i < bytePixles.Length; i++)
-            {
-                result[i] = bytePixles[i];
-            }
-            return result;
-        }
-
-        private static byte[] FloatToByte(float[] floatPixles)
-        {
-            byte[] result = new byte[floatPixles.Length];
-            for (int i = 0; i < floatPixles.Length; i++)
-            {
-                result[i] = (byte)floatPixles[i];
-            }
-            return result;
-        }
-
-        private static float[] saveToArray()
+        private static byte[] SaveToArray()
         {
             int stride = bitmapSource.PixelWidth * (bitmapSource.Format.BitsPerPixel / 8);
             byte[] pixlesByte = new byte[bitmapSource.PixelHeight * stride];
             bitmapSource.CopyPixels(pixlesByte, stride, 0);
-            return ByteToFloat(pixlesByte);
+            return pixlesByte;
         }
 
-        public static float[] loadToArray(string path)
+        public static byte[] LoadToArray(string path)
         {
             bitmapSource = new BitmapImage(new System.Uri(path));
-            return saveToArray();
+            return SaveToArray();
         }
 
-        private static WriteableBitmap saveToWritablebitap(ref float[] pixels)
+        private static WriteableBitmap SaveToWriteablebitap(byte[] pixels)
         {
-            byte[] bytes = FloatToByte(pixels);
             int stride = bitmapSource.PixelWidth * (bitmapSource.Format.BitsPerPixel / 8);
             WriteableBitmap writeableBitmap = new WriteableBitmap(bitmapSource.PixelWidth, bitmapSource.PixelHeight, 96, 96, bitmapSource.Format, null);
-            writeableBitmap.WritePixels(new Int32Rect(0, 0, bitmapSource.PixelWidth, bitmapSource.PixelHeight), bytes, stride, 0);
+            writeableBitmap.WritePixels(new Int32Rect(0, 0, bitmapSource.PixelWidth, bitmapSource.PixelHeight), pixels, stride, 0);
             return writeableBitmap;
         }
 
@@ -67,10 +46,10 @@ namespace ProjektJA.Mechanism
             }
         }
 
-        public static void saveBitmap(ref float[] pixels, string pat)
+        public static void SaveBitmap(byte[] pixels, string path)
         {
-            bitmapSource = saveToWritablebitap(ref pixels);
-            Export(pat);
+            bitmapSource = SaveToWriteablebitap(pixels);
+            Export(path);
         }
     }
 }

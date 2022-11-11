@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.Threading.Tasks;
 
 namespace ProjektJA
@@ -11,7 +10,7 @@ namespace ProjektJA
     {
         private List<Task> tasks = new List<Task>();
         private int numOfTasks;
-        private float[] pixels;
+        private byte[] pixels;
         private GrayScaleInterface mechanism;
 
         private void SelectMechanism(Language language)
@@ -30,7 +29,7 @@ namespace ProjektJA
             }
         }
 
-        public GrayScaleManager(int numOfTasks, ref float[] pixels, Language language)
+        public GrayScaleManager(int numOfTasks, byte[] pixels, Language language)
         {
             this.numOfTasks = numOfTasks;
             this.pixels = pixels;
@@ -51,24 +50,6 @@ namespace ProjektJA
 
         public void ExecuteEffect()
         {
-            //float[] meanTime = new float[20];
-            //for (int i = 0; i < 20; i++)
-            //{
-            //    AddTasks();
-
-            //    Stopwatch sw = new Stopwatch();
-            //    sw.Start();
-
-            //    Parallel.ForEach(tasks, (task) => task.Start());
-            //    Task.WaitAll(tasks.ToArray());
-
-            //    sw.Stop();
-            //    meanTime[i] = sw.Elapsed.Ticks;
-            //}
-            //Array.Sort(meanTime);
-
-            //Console.WriteLine("Ticks: " + meanTime[10]);
-
             AddTasks();
 
             Stopwatch sw = new Stopwatch();

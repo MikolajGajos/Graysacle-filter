@@ -1,7 +1,3 @@
-;rbx	- end index
-;rdx	- beg index
-;xmm0	- first element
-;r9		- array3
 
 .code
 GrayScaleASMFunc proc
@@ -23,8 +19,8 @@ grayScaleLoop:
 	je			endLoop						
 	
 	movdqu		xmm0, oword ptr[rcx]		
-	movdqu		xmm2, oword ptr[rcx + 4]	
-	movdqu		xmm3, oword ptr[rcx + 8]	
+	movdqu		xmm2, oword ptr[rcx + 1]	
+	movdqu		xmm3, oword ptr[rcx + 2]	
 	addps		xmm0, xmm2
 	addps		xmm0, xmm3
 	punpckldq	xmm0, xmm0					
@@ -35,7 +31,7 @@ grayScaleLoop:
 
 	movdqu		oword ptr[rcx], xmm0
 	
-	add			rcx, 16						
+	add			rcx, 4					
 	sub			rdi, 1						
 	jmp			grayScaleLoop				
 endLoop:
