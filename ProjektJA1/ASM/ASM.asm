@@ -10,9 +10,9 @@ sub		r10, r11								   ;establish counter
 mov		rdi, r10								   ;give counter to rdi
 shr		edi, 2									   ;divide counter by 4 
 												   
-mov		rax, 4h									   ;prepare multiplying by 4
-mul		r11										   ;multiply beg index by 4 (pixels size in bytes) 
-add		rcx, rax								   ;add to pixels offset table
+mov		rax, 0h									   ;give 0 to rax
+add		rax, r11								   ;add offset to rax
+add		rcx, rax								   ;add to table
 
 grayScaleLoop:
 	cmp			edi, 0h						

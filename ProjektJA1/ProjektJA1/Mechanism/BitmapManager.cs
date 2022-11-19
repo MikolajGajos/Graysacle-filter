@@ -6,7 +6,7 @@ namespace ProjektJA.Mechanism
 {
     internal class BitmapManager
     {
-        private static BitmapSource bitmapSource;
+        public static BitmapSource bitmapSource;
 
         private static byte[] SaveToArray()
         {

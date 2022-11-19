@@ -11,6 +11,9 @@ namespace ProjektJA
         private List<Task> tasks = new List<Task>();
         private int numOfTasks;
         private byte[] pixels;
+        private int width;
+        private int height;
+        private int bytesPerPixel = 4;
         private GrayScaleInterface mechanism;
 
         private void SelectMechanism(Language language)
@@ -29,23 +32,50 @@ namespace ProjektJA
             }
         }
 
-        public GrayScaleManager(int numOfTasks, byte[] pixels, Language language)
+        public GrayScaleManager(int numOfTasks, byte[] pixels, int width, int height, Language language)
         {
             this.numOfTasks = numOfTasks;
             this.pixels = pixels;
+            this.width = width;
+            this.height = height;
             SelectMechanism(language);
         }
 
         private void AddTasks()
         {
             tasks.Clear();
-            int sectionSize = pixels.Length / numOfTasks;
+            //int sectionSize = pixels.Length / numOfTasks;
+            //int end = 0;
+            //for (int i = 0; i < numOfTasks; i++)
+            //{
+            //    int beg = end;
+            //    end = (i + 1) * sectionSize;
+            //    while (pixels[end - 1] != 255) end++;
+            //    int stop = end;
+            //    tasks.Add(new Task(() => mechanism.ExecuteEffect(pixels, beg, stop)));
+            //}
+
+            int rowsPerTask = height / numOfTasks;
+            int remainder = height % numOfTasks;
+            int endPixel = 0;
+            int currentRow = 0;
             for (int i = 0; i < numOfTasks; i++)
             {
-                int beg = i * sectionSize;
-                int end = (i + 1) * sectionSize;
-                tasks.Add(new Task(() => mechanism.ExecuteEffect(pixels, beg, end)));
+                int start = endPixel;
+
+                currentRow += rowsPerTask;
+                if (remainder > 0)
+                {
+                    currentRow++;
+                    remainder--;
+                }
+
+                endPixel = bytesPerPixel * currentRow * width;
+                int stop = endPixel;
+
+                tasks.Add(new Task(() => mechanism.ExecuteEffect(pixels, start, stop)));
             }
+
         }
 
         public void ExecuteEffect()
