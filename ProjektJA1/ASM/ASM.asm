@@ -1,41 +1,35 @@
 
 .code
 GrayScaleASMFunc proc
-
-movdqu	xmm1, oword ptr[r9]						   ;give array3 to xmm1												  
-mov		r11, rdx								   ;beg index to r11
-mov		r10, r8									   ;end index to r10
-												   
-sub		r10, r11								   ;establish counter
-mov		rdi, r10								   ;give counter to rdi
-shr		edi, 2									   ;divide counter by 4 
-												   
-mov		rax, 0h									   ;give 0 to rax
-add		rax, r11								   ;add offset to rax
-add		rcx, rax								   ;add to table
-
-grayScaleLoop:
-	cmp			edi, 0h						
-	je			endLoop						
-	
-	movdqu		xmm0, oword ptr[rcx]		
-	movdqu		xmm2, oword ptr[rcx + 1]	
-	movdqu		xmm3, oword ptr[rcx + 2]	
-	addps		xmm0, xmm2
-	addps		xmm0, xmm3
-	punpckldq	xmm0, xmm0					
-	punpcklqdq	xmm0, xmm0		
-	divps		xmm0, xmm1
-	
-
-
-	movdqu		oword ptr[rcx], xmm0
-	
-	add			rcx, 4					
-	sub			rdi, 1						
-	jmp			grayScaleLoop				
-endLoop:
-    ret
+												
+mov		r11, rdx								 ;start index to r11
+mov		r10, r8									 ;stop index to r10												   
+sub		r10, r11								 ;calculate the counter
+mov		rdi, r10								 ;counter to rdi
+shr		edi, 2									 ;divide counter by 4 											   
+add		rcx, r11								 ;add start offset to rcx
+												 
+grayScaleLoop:									 
+	cmp		edi, 0h								 ;end condition check
+	je		endLoop								 
+												 
+	mov		dx, 0								 
+	mov		al, byte ptr[rcx]					 
+	mov		bl, byte ptr[rcx + 1]				 
+	add		ax, bx								 
+	mov		bl, byte ptr[rcx + 2]				 
+	add		ax, bx								 
+	mov		bx, 3								 
+	div		bx									 
+	mov		byte ptr[rcx], al					 
+	mov		byte ptr[rcx+ 1], al				 
+	mov		byte ptr[rcx + 2], al				 
+												 
+	add		rcx, 4								 ;increment table
+	dec		rdi									 ;decrement loop counter
+	jmp		grayScaleLoop						   
+endLoop:										   
+    ret											   
 
 GrayScaleASMFunc endp
 end
