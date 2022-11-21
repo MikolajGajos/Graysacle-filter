@@ -8,12 +8,14 @@ sub		r10, r11								 ;calculate the counter
 mov		rdi, r10								 ;counter to rdi
 shr		edi, 2									 ;divide counter by 4 											   
 add		rcx, r11								 ;add start offset to rcx
+xor		ah, ah			
+xor		bh, bh
 												 
 grayScaleLoop:									 
 	cmp		edi, 0h								 ;end condition check
 	je		endLoop								 
-												 
-	mov		dx, 0								 
+						
+	xor		dx, dx								 
 	mov		al, byte ptr[rcx]					 
 	mov		bl, byte ptr[rcx + 1]				 
 	add		ax, bx								 

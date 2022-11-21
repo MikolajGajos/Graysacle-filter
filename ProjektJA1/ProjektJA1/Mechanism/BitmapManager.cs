@@ -1,24 +1,32 @@
 ﻿using System.IO;
 using System.Windows.Media.Imaging;
 using System.Windows;
+using System.Drawing.Imaging;
+using System.Drawing;
+using System.Runtime.CompilerServices;
 
 namespace ProjektJA.Mechanism
 {
     internal class BitmapManager
     {
-        public static BitmapSource bitmapSource;
+        private static BitmapSource bitmapSource;
+        public static int Height { set; get; }
+        public static int Width { set; get; }
 
         private static byte[] SaveToArray()
         {
             int stride = bitmapSource.PixelWidth * (bitmapSource.Format.BitsPerPixel / 8);
             byte[] pixels = new byte[bitmapSource.PixelHeight * stride];
             bitmapSource.CopyPixels(pixels, stride, 0);
+            
             return pixels;
         }
 
         public static byte[] LoadToArray(string path)
         {
             bitmapSource = new BitmapImage(new System.Uri(path));
+            Height = bitmapSource.PixelHeight;
+            Width = bitmapSource.PixelWidth;
             return SaveToArray();
         }
 
