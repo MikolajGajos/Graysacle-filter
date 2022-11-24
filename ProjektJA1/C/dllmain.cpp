@@ -4,7 +4,7 @@
 
 void GrayScale(uint8_t* pixels, int beg, int end)
 {
-    for (int i = beg; i < end; i += 4)
+    for (int i = beg; i < end; i += 3)
     {
         uint8_t b = pixels[i];
         uint8_t g = pixels[i + 1];
@@ -19,7 +19,7 @@ void GrayScale(uint8_t* pixels, int beg, int end)
 }
 
 
-extern "C" __declspec(dllexport) void GreyScaleCFunc(uint8_t * pixels, int beg, int end)
+extern "C" __declspec(dllexport) void GrayScaleCFunc(uint8_t * pixels, int beg, int end)
 {
     GrayScale(pixels, beg, end);
 }
