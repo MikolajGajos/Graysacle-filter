@@ -10,7 +10,7 @@ namespace ProjektJA
             BitmapManager bm = new BitmapManager();
             bm.Load(@"D:\dupa\eo.bmp");
 
-            GrayScaleManager manager = new GrayScaleManager(1, bm.GetBitmapData(), Language.ASM);
+            GrayScaleManager manager = new GrayScaleManager(64, bm.GetBitmapData(), Language.C);
 
             for (int i = 0; i < 10; i++)
             {
