@@ -105,7 +105,7 @@ namespace ProjektJA
             SelectMechanism(language);
         }  
 
-        public void ExecuteEffect()
+        public double ExecuteEffect()
         {
             AddTasks();
 
@@ -116,7 +116,8 @@ namespace ProjektJA
             Task.WaitAll(tasks.ToArray());
 
             sw.Stop();
-            Console.WriteLine(sw.Elapsed.Ticks);
+            //Console.WriteLine(sw.Elapsed.TotalMilliseconds);
+            return sw.Elapsed.TotalMilliseconds;
         }
 
         private void AddTasks()

@@ -10,11 +10,13 @@ void GrayScale(uint8_t* pixels, int beg, int end)
         uint8_t g = pixels[i + 1];
         uint8_t r = pixels[i + 2];
 
-        uint8_t avg = (r + g + b) / 3;
+        int avg = b + g + r;
+        avg = avg / 3;
+        uint8_t byteAvg = (uint8_t)avg;
 
-        pixels[i] = avg;
-        pixels[i + 1] = avg;
-        pixels[i + 2] = avg;
+        pixels[i] = byteAvg;
+        pixels[i + 1] = byteAvg;
+        pixels[i + 2] = byteAvg;
     }
 }
 

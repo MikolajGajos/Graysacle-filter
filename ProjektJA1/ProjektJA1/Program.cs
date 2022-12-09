@@ -1,5 +1,6 @@
 ﻿using ProjektJA.Mechanism;
 using System;
+using System.Security.Authentication;
 
 namespace ProjektJA
 {
@@ -10,12 +11,16 @@ namespace ProjektJA
             BitmapManager bm = new BitmapManager();
             bm.Load(@"D:\dupa\eo.bmp");
 
-            GrayScaleManager manager = new GrayScaleManager(64, bm.GetBitmapData(), Language.C);
+            GrayScaleManager manager = new GrayScaleManager(1, bm.GetBitmapData(), Language.C);
 
-            for (int i = 0; i < 10; i++)
+            double[] array = new double[100];
+
+            for (int i = 0; i < array.Length; i++)
             {
-                manager.ExecuteEffect();
+                array[i] = manager.ExecuteEffect();
             }
+            Array.Sort(array);
+            Console.WriteLine(array[50]);
 
             bm.Save(@"D:\dupa\xdd.bmp");
 
