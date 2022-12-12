@@ -1,6 +1,5 @@
 ﻿using ProjektJA.Mechanism;
 using System;
-using System.Security.Authentication;
 
 namespace ProjektJA
 {
@@ -9,9 +8,9 @@ namespace ProjektJA
         static void Main()
         {
             BitmapManager bm = new BitmapManager();
-            bm.Load(@"D:\dupa\huj.bmp");
+            bm.Load(@"D:\dupa\cipa.bmp");
 
-            GrayScaleManager manager = new GrayScaleManager(6, bm.GetBitmapData(), Language.ASM);
+            GrayScaleManager manager = new GrayScaleManager(1, bm.GetBitmapData(), Language.ASM);
 
             double[] array = new double[100];
 
