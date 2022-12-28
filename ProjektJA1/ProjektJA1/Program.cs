@@ -8,7 +8,7 @@ namespace ProjektJA
         static void Main()
         {
             BitmapManager bm = new BitmapManager();
-            bm.Load(@"D:\dupa\cipa.bmp");
+            bm.Load(@"D:\dupa\huj.bmp");
 
             GrayScaleManager manager = new GrayScaleManager(1, bm.GetBitmapData(), Language.ASM);
 

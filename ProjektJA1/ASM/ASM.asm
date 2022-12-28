@@ -3,13 +3,17 @@
 multiplier			dword 0.333
 destinationArray	byte 0, 0, 0, 4, 4, 4, 8, 8, 8, 12, 12, 12, 1, 1, 1, 1 
 
-shuffleArray0		byte 0, 15, 15, 15, 3, 15, 15, 15, 6, 15, 15, 15,  9, 15, 15, 15   
-shuffleArray1		byte 1, 15, 15, 15, 4, 15, 15, 15, 7, 15, 15, 15, 10, 15, 15, 15   
-shuffleArray2		byte 2, 15, 15, 15, 5, 15, 15, 15, 8, 15, 15, 15, 11, 15, 15, 15   
+shuffleArray0		byte 0, 80h, 80h, 80h, 3, 80h, 80h, 80h, 6, 80h, 80h, 80h,  9, 80h, 80h, 80h   
+shuffleArray1		byte 1, 80h, 80h, 80h, 4, 80h, 80h, 80h, 7, 80h, 80h, 80h, 10, 80h, 80h, 80h  
+shuffleArray2		byte 2, 80h, 80h, 80h, 5, 80h, 80h, 80h, 8, 80h, 80h, 80h, 11, 80h, 80h, 80h   
 
 .code
 GrayScaleASMFunc proc
-												
+						
+mov			ebx, dword ptr[rbp + 32] 
+mov			r12, rbx
+
+
 ;establish loop counter
 mov			r11, rdx							;start index to r11
 mov			r10, r8								;stop index to r10												   
@@ -21,8 +25,7 @@ add			rcx, r11							;add start offset to rcx
 movdqu		xmm5, oword ptr[destinationArray]	;
 movdqu		xmm6, oword ptr[shuffleArray0]		;
 movdqu		xmm7, oword ptr[shuffleArray1]		;
-movdqu		xmm8, oword ptr[shuffleArray2]		;
-mov			r13, 0								;
+movdqu		xmm8, oword ptr[shuffleArray2]		;								;
 
 ;prepare xmm3 for dividing
 mov			eax, dword ptr[multiplier]			;move 3 to eax
@@ -37,7 +40,6 @@ grayScaleLoop:
 	pxor xmm0, xmm0
 
 	movdqu		xmm0, oword ptr[rcx]
-	pinsrb		xmm0, r13, 15
 	movdqu		xmm1, xmm0
 	movdqu		xmm2, xmm0
 	pshufb		xmm0, xmm6
