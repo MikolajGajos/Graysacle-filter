@@ -54,7 +54,7 @@ namespace ProjektJA
                 endPixel = currentRow * bmpData.Stride;
                 int stop = endPixel;
 
-                tasks.Add(new Task(() => mechanism.ExecuteEffect(bmpData.Scan0, start, stop)));
+                tasks.Add(new Task(() => mechanism.ExecuteEffect(bmpData.Scan0, start, stop, bmpData.Stride, bmpData.Width)));
             }
         }
 

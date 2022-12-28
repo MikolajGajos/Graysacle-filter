@@ -10,15 +10,23 @@ shuffleArray2		byte 2, 80h, 80h, 80h, 5, 80h, 80h, 80h, 8, 80h, 80h, 80h, 11, 80
 .code
 GrayScaleASMFunc proc
 						
-mov			ebx, dword ptr[rbp + 32] 
-mov			r12, rbx
+;prepare xmm3 for dividing
+mov			eax, dword ptr[multiplier]			;move 3 to eax
+movd		xmm3, eax							;move 3 from eax to xmm3 with convertion to float
+pshufd		xmm3, xmm3, 0
 
+mov			ebx, dword ptr[rbp + 32]			;width
+mov			eax, 3
+mul			ebx
+mov			r12, rax							;width * 3
+mov			rbx, r9								;stride
+sub			rbx, rax							;stride - width
+mov			rdi, r12							;move counter to rdi
 
 ;establish loop counter
 mov			r11, rdx							;start index to r11
 mov			r10, r8								;stop index to r10												   
-sub			r10, r11							;calculate the counter
-mov			rdi, r10							;move counter to rdi										   
+sub			r10, r11							;calculate the counter										   
 add			rcx, r11							;add start offset to rcx
 
 ;prepare registers
@@ -26,16 +34,11 @@ movdqu		xmm5, oword ptr[destinationArray]	;
 movdqu		xmm6, oword ptr[shuffleArray0]		;
 movdqu		xmm7, oword ptr[shuffleArray1]		;
 movdqu		xmm8, oword ptr[shuffleArray2]		;								;
-
-;prepare xmm3 for dividing
-mov			eax, dword ptr[multiplier]			;move 3 to eax
-movd		xmm3, eax							;move 3 from eax to xmm3 with convertion to float
-pshufd		xmm3, xmm3, 0
 												 
 grayScaleLoop:			
 	;end condition check
-	cmp			rdi, 12								;compare counter with 0
-	je			lastPixels							;conditional jump			
+	cmp			rdi, 16								;compare counter with 0
+	jl			lastPixels							;conditional jump	
 
 	pxor xmm0, xmm0
 
@@ -124,6 +127,16 @@ last3:
 jmp	endLoop
 
 endLoop:
+
+add			rcx, rdi
+add			rcx, rbx
+sub			r10, r9
+cmp			r10, 0
+je			endProg		
+mov			rdi, r12
+jmp			grayScaleLoop
+
+endProg:
 ret
 
 
