@@ -33,7 +33,7 @@ add			rcx, r11							;add start offset to rcx
 movdqu		xmm5, oword ptr[destinationArray]	;
 movdqu		xmm6, oword ptr[shuffleArray0]		;
 movdqu		xmm7, oword ptr[shuffleArray1]		;
-movdqu		xmm8, oword ptr[shuffleArray2]		;								;
+movdqu		xmm8, oword ptr[shuffleArray2]		;								
 												 
 grayScaleLoop:			
 	;end condition check
@@ -57,15 +57,16 @@ grayScaleLoop:
 	pshufb		xmm0, xmm5
 	movd		dword ptr[rcx	 ], xmm0
 	pshufd		xmm0, xmm0, 00111001b
-	movd		dword ptr[rcx + 4], xmm0 
-	pshufd		xmm0, xmm0, 00111001b
-	movd		dword ptr[rcx + 8], xmm0 
+	movq		qword ptr[rcx + 4], xmm0 
 
-	add		rcx, 12									;add to table
-	sub		rdi, 12									;subtract form loop counter
-	jmp		grayScaleLoop						   
+	add			rcx, 12								;add to table
+	sub			rdi, 12								;subtract form loop counter
+	jmp			grayScaleLoop						   
 
 lastPixels:										   
+
+cmp			rdi, 11							;compare counter with 11
+jg			last12							;conditional jump	
 
 cmp			rdi, 9							;compare counter with 9
 je			last9							;conditional jump
@@ -76,29 +77,21 @@ je			last6							;conditional jump
 cmp			rdi, 3							;compare counter with 3
 je			last3							;conditional jump
 	
+jmp			endLoop
+
 last12:
 
 	pxor xmm0, xmm0
 
-	;first pixel
-	pinsrb		xmm0, byte ptr[rcx     ], 0
-	pinsrb		xmm1, byte ptr[rcx +  1], 0
-	pinsrb		xmm2, byte ptr[rcx +  2], 0
+	movq		xmm0, qword ptr[rcx    ]
+	movd		xmm1, dword ptr[rcx + 8]
+	movlhps		xmm0, xmm1
 
-	;second pixel
-	pinsrb		xmm0, byte ptr[rcx +  3], 4
-	pinsrb		xmm1, byte ptr[rcx +  4], 4
-	pinsrb		xmm2, byte ptr[rcx +  5], 4
-
-	;third pixel
-	pinsrb		xmm0, byte ptr[rcx +  6], 8
-	pinsrb		xmm1, byte ptr[rcx +  7], 8
-	pinsrb		xmm2, byte ptr[rcx +  8], 8
-
-	;fourth pixel
-	pinsrb		xmm0, byte ptr[rcx +  9], 12
-	pinsrb		xmm1, byte ptr[rcx + 10], 12
-	pinsrb		xmm2, byte ptr[rcx + 11], 12
+	movdqu		xmm1, xmm0
+	movdqu		xmm2, xmm0
+	pshufb		xmm0, xmm6
+	pshufb		xmm1, xmm7
+	pshufb		xmm2, xmm8
 													
 	;calculate avarage value of pixels									
 	paddd		xmm0, xmm1							;add b with g
@@ -108,23 +101,86 @@ last12:
 	pshufb		xmm0, xmm5
 	movd		dword ptr[rcx	 ], xmm0
 	pshufd		xmm0, xmm0, 00111001b
-	movd		dword ptr[rcx + 4], xmm0 
-	pshufd		xmm0, xmm0, 00111001b
-	movd		dword ptr[rcx + 8], xmm0 
+	movq		qword ptr[rcx + 4], xmm0 
 
-jmp	endLoop
+	add			rcx, 12								;add to table
+	sub			rdi, 12								;subtract form loop counter
+
+jmp	lastPixels
 
 last9:
+
+	pxor xmm0, xmm0
+
+	movq		xmm0, qword ptr[rcx    ]
+	pinsrb		xmm0, byte  ptr[rcx + 8], 8
+
+	movdqu		xmm1, xmm0
+	movdqu		xmm2, xmm0
+	pshufb		xmm0, xmm6
+	pshufb		xmm1, xmm7
+	pshufb		xmm2, xmm8
+													
+	;calculate avarage value of pixels									
+	paddd		xmm0, xmm1							;add b with g
+	paddd		xmm0, xmm2							;add b+g with r																			
+	mulps		xmm0, xmm3							;multiply by 0.333				
+	
+	pshufb		xmm0, xmm5
+	movq		qword ptr[rcx    ], xmm0 
+	pextrb		byte  ptr[rcx + 8], xmm0, 9
 
 jmp	endLoop
 
 last6:
 
+	pxor xmm0, xmm0
+
+	movd		xmm0, dword ptr[rcx    ]
+	pinsrb		xmm0, byte  ptr[rcx + 4], 4
+	pinsrb		xmm0, byte  ptr[rcx + 5], 5
+
+	movdqu		xmm1, xmm0
+	movdqu		xmm2, xmm0
+	pshufb		xmm0, xmm6
+	pshufb		xmm1, xmm7
+	pshufb		xmm2, xmm8
+													
+	;calculate avarage value of pixels									
+	paddd		xmm0, xmm1							;add b with g
+	paddd		xmm0, xmm2							;add b+g with r																			
+	mulps		xmm0, xmm3							;multiply by 0.333				
+	
+	pshufb		xmm0, xmm5
+	movd		dword ptr[rcx    ], xmm0 
+	pextrb		byte  ptr[rcx + 4], xmm0, 4
+	pextrb		byte  ptr[rcx + 5], xmm0, 5
+
 jmp	endLoop
 
 last3:
 
-jmp	endLoop
+	pxor xmm0, xmm0
+
+	pinsrb		xmm0, byte  ptr[rcx	   ], 0
+	pinsrb		xmm0, byte  ptr[rcx + 1], 1
+	pinsrb		xmm0, byte  ptr[rcx + 2], 2
+
+	movdqu		xmm1, xmm0
+	movdqu		xmm2, xmm0
+	pshufb		xmm0, xmm6
+	pshufb		xmm1, xmm7
+	pshufb		xmm2, xmm8
+													
+	;calculate avarage value of pixels									
+	paddd		xmm0, xmm1							;add b with g
+	paddd		xmm0, xmm2							;add b+g with r																			
+	mulps		xmm0, xmm3							;multiply by 0.333				
+	
+	pshufb		xmm0, xmm5
+	pextrb		byte  ptr[rcx    ], xmm0, 0
+	pextrb		byte  ptr[rcx + 1], xmm0, 1
+	pextrb		byte  ptr[rcx + 2], xmm0, 2
 
 endLoop:
 
