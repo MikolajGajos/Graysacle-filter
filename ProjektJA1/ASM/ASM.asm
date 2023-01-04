@@ -1,11 +1,10 @@
 
 .data
 multiplier			dword 0.333
-destinationArray	byte 0, 0, 0, 4, 4, 4, 8, 8, 8, 12, 12, 12, 1, 1, 1, 1 
-
-shuffleArray0		byte 0, 80h, 80h, 80h, 3, 80h, 80h, 80h, 6, 80h, 80h, 80h,  9, 80h, 80h, 80h   
-shuffleArray1		byte 1, 80h, 80h, 80h, 4, 80h, 80h, 80h, 7, 80h, 80h, 80h, 10, 80h, 80h, 80h  
-shuffleArray2		byte 2, 80h, 80h, 80h, 5, 80h, 80h, 80h, 8, 80h, 80h, 80h, 11, 80h, 80h, 80h   
+bytesSortingArray	byte  0, 0, 0, 4, 4, 4, 8, 8, 8, 12, 12, 12, 1, 1, 1, 1 
+blueComponents		byte  0, 80h, 80h, 80h, 3, 80h, 80h, 80h, 6, 80h, 80h, 80h,  9, 80h, 80h, 80h   
+greenComponents		byte  1, 80h, 80h, 80h, 4, 80h, 80h, 80h, 7, 80h, 80h, 80h, 10, 80h, 80h, 80h  
+redComponents		byte  2, 80h, 80h, 80h, 5, 80h, 80h, 80h, 8, 80h, 80h, 80h, 11, 80h, 80h, 80h   
 
 .code
 GrayScaleASMFunc proc
@@ -15,6 +14,7 @@ mov			eax, dword ptr[multiplier]			;move 3 to eax
 movd		xmm3, eax							;move 3 from eax to xmm3 with convertion to float
 pshufd		xmm3, xmm3, 0
 
+;calculate width and stride
 mov			ebx, dword ptr[rbp + 32]			;width
 mov			eax, 3
 mul			ebx
@@ -30,10 +30,10 @@ sub			r10, r11							;calculate the counter
 add			rcx, r11							;add start offset to rcx
 
 ;prepare registers
-movdqu		xmm5, oword ptr[destinationArray]	;
-movdqu		xmm6, oword ptr[shuffleArray0]		;
-movdqu		xmm7, oword ptr[shuffleArray1]		;
-movdqu		xmm8, oword ptr[shuffleArray2]		;								
+movdqu		xmm5, oword ptr[bytesSortingArray]	;
+movdqu		xmm6, oword ptr[blueComponents   ]	;
+movdqu		xmm7, oword ptr[greenComponents  ]	;
+movdqu		xmm8, oword ptr[redComponents    ]	;								
 												 
 grayScaleLoop:			
 	;end condition check
@@ -42,6 +42,7 @@ grayScaleLoop:
 
 	pxor xmm0, xmm0
 
+	;prepare registers for calculating pixels
 	movdqu		xmm0, oword ptr[rcx]
 	movdqu		xmm1, xmm0
 	movdqu		xmm2, xmm0
@@ -54,11 +55,13 @@ grayScaleLoop:
 	paddd		xmm0, xmm2							;add b+g with r																			
 	mulps		xmm0, xmm3							;multiply by 0.333				
 	
+	;extract bytes from register
 	pshufb		xmm0, xmm5
 	movd		dword ptr[rcx	 ], xmm0
 	pshufd		xmm0, xmm0, 00111001b
 	movq		qword ptr[rcx + 4], xmm0 
 
+	;counter and pointer
 	add			rcx, 12								;add to table
 	sub			rdi, 12								;subtract form loop counter
 	jmp			grayScaleLoop						   
@@ -128,7 +131,7 @@ last9:
 	
 	pshufb		xmm0, xmm5
 	movq		qword ptr[rcx    ], xmm0 
-	pextrb		byte  ptr[rcx + 8], xmm0, 9
+	pextrb		byte  ptr[rcx + 8], xmm0, 8
 
 jmp	endLoop
 
