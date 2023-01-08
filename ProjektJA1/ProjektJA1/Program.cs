@@ -5,25 +5,29 @@ namespace ProjektJA
 {
     internal static class Program
     {
+        static BitmapManager bm = new BitmapManager();
+
         static void Main()
         {
-            BitmapManager bm = new BitmapManager();
-            bm.Load(@"D:\dupa\eo.bmp");
+            bm.Load(@"D:\dupa\dupsko.bmp");
 
-            GrayScaleManager manager = new GrayScaleManager(64, bm.GetBitmapData(), Language.C);
+            GrayScaleManager manager = new GrayScaleManager(1, bm.GetBitmapData(), Language.C);
 
 
-            double[] array = new double[10];
+            double[] array = new double[100];
 
             for (int i = 0; i < array.Length; i++)
             {
                 array[i] = manager.ExecuteEffect();
-                Console.WriteLine(array[i]);
+                //Console.WriteLine(array[i]);
             }
             Array.Sort(array);
-            Console.WriteLine(array[5]);
+            Console.WriteLine(array[50]);
 
             bm.Save(@"D:\dupa\xdd.bmp");
+
+
+            //bm.Load(@"D:\dupa\test.bmp");
 
             //ExecuteAlgorithm(1);
             //ExecuteAlgorithm(2);
@@ -46,21 +50,21 @@ namespace ProjektJA
 
         static void ExecuteAlgorithm(int numOfThreads)
         {
-            BitmapManager bm = new BitmapManager();
-            bm.Load(@"D:\dupa\test.bmp");
+            
 
             GrayScaleManager manager = new GrayScaleManager(numOfThreads, bm.GetBitmapData(), Language.ASM);
 
-            double[] array = new double[10];
+            double[] array = new double[1000];
 
             for (int i = 0; i < array.Length; i++)
             {
                 array[i] = manager.ExecuteEffect();
+                //Console.WriteLine(array[i]);
             }
             Array.Sort(array);
-            Console.WriteLine("Threads: " + numOfThreads);
-            Console.WriteLine(array[5]);
-            Console.WriteLine();
+            //Console.WriteLine("Threads: " + numOfThreads);
+            Console.WriteLine(array[500]);
+            //Console.WriteLine();
         }
     }
 }

@@ -4,24 +4,27 @@
 
 void GrayScale(uint8_t* pixels, int beg, int end, int stride, int width)
 {
-    while (end > 0)
+   width *= 3;
+   int currentpixel = beg;
+
+   while (currentpixel < end)
     {
-        for (int i = beg; i < width; i += 3)
+        for (int i = currentpixel; i < currentpixel + width; i += 3)
         {
-            uint8_t b = pixels[i];
+            uint8_t b = pixels[i    ];
             uint8_t g = pixels[i + 1];
             uint8_t r = pixels[i + 2];
 
             int avg = b + g + r;
-            avg = avg / 3;
-            uint8_t byteAvg = (uint8_t)avg;
+            avg /= 3;
+            uint8_t byteavg = (uint8_t)avg;
 
-            pixels[i] = byteAvg;
-            pixels[i + 1] = byteAvg;
-            pixels[i + 2] = byteAvg;
+            pixels[i    ] = byteavg;
+            pixels[i + 1] = byteavg;
+            pixels[i + 2] = byteavg;
         }
-        end += (stride - width);
-    }  
+        currentpixel += stride;
+   } 
 }
 
 
