@@ -2,28 +2,35 @@
 #include "pch.h"
 #include <stdint.h>
 
-void GrayScale(uint8_t* pixels, int beg, int end)
+void GrayScale(uint8_t* pixels, int beg, int end, int stride, int width)
 {
-    for (int i = beg; i < end; i += 3)
+   width *= 3;
+   int currentpixel = beg;
+
+   while (currentpixel < end)
     {
-        uint8_t b = pixels[i];
-        uint8_t g = pixels[i + 1];
-        uint8_t r = pixels[i + 2];
+        for (int i = currentpixel; i < currentpixel + width; i += 3)
+        {
+            uint8_t b = pixels[i    ];
+            uint8_t g = pixels[i + 1];
+            uint8_t r = pixels[i + 2];
 
-        int avg = b + g + r;
-        avg = avg / 3;
-        uint8_t byteAvg = (uint8_t)avg;
+            int avg = b + g + r;
+            avg /= 3;
+            uint8_t byteavg = (uint8_t)avg;
 
-        pixels[i] = byteAvg;
-        pixels[i + 1] = byteAvg;
-        pixels[i + 2] = byteAvg;
-    }
+            pixels[i    ] = byteavg;
+            pixels[i + 1] = byteavg;
+            pixels[i + 2] = byteavg;
+        }
+        currentpixel += stride;
+   } 
 }
 
 
-extern "C" __declspec(dllexport) void GrayScaleCFunc(uint8_t * pixels, int beg, int end)
+extern "C" __declspec(dllexport) void GrayScaleCFunc(uint8_t * pixels, int beg, int end, int stride, int width)
 {
-    GrayScale(pixels, beg, end);
+    GrayScale(pixels, beg, end, stride, width);
 }
 
 BOOL APIENTRY DllMain( HMODULE hModule,
