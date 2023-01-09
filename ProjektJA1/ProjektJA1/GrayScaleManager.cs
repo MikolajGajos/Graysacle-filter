@@ -52,9 +52,9 @@ namespace ProjektJA
                     remainder--;
                 }
                 endPixel = currentRow * bmpData.Stride;
-                int stop = endPixel;
+                int end = endPixel;
 
-                tasks.Add(new Task(() => mechanism.ExecuteEffect(bmpData.Scan0, start, stop, bmpData.Stride, bmpData.Width)));
+                tasks.Add(new Task(() => mechanism.ExecuteEffect(bmpData.Scan0, start, end, bmpData.Stride, bmpData.Width)));
             }
         }
 

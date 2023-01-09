@@ -20,7 +20,7 @@ movdqu		xmm8, oword ptr[redComponents    ]
 
 ;establish loop counter
 mov			r11, rdx							;start index to r11
-mov			r10, r8								;stop index to r10												   
+mov			r10, r8								;end index to r10												   
 sub			r10, r11							;calculate loop counter						   
 add			rcx, r11							;add start offset to rcx
 mov			rdi, r10							;counter to rdi	
@@ -46,9 +46,9 @@ grayScaleLoop:
 	movdqu		xmm0, oword ptr[rcx]
 	movdqu		xmm1, xmm0
 	movdqu		xmm2, xmm0
-	pshufb		xmm0, xmm6
-	pshufb		xmm1, xmm7
-	pshufb		xmm2, xmm8
+	pshufb		xmm0, xmm6							;blue components 
+	pshufb		xmm1, xmm7							;green components
+	pshufb		xmm2, xmm8							;red components
 													
 	;calculate avarage value of pixels									
 	paddd		xmm0, xmm1							;add b with g
@@ -198,6 +198,7 @@ _3Bytes:
 
 endLoop:
 
+;calculate loop counter
 add			rcx, rbx
 sub			r10, r9	
 cmp			r10, 0
@@ -207,7 +208,6 @@ jmp			grayScaleLoop
 
 endProg:
 ret
-
 
 GrayScaleASMFunc endp
 end
