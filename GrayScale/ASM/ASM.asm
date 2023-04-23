@@ -52,8 +52,8 @@ grayScaleLoop:
 													
 	;calculate avarage value of pixels									
 	paddd		xmm0, xmm1							;add b with g
-	paddd		xmm0, xmm2							;add b+g with r																			
-	mulps		xmm0, xmm3							;multiply by 0.333				
+	paddd		xmm0, xmm2							;add b+g with r		
+	mulps		xmm0, xmm3							;multiply by 0.333	
 	
 	;extract bytes from register
 	pshufb		xmm0, xmm5
@@ -197,7 +197,6 @@ _3Bytes:
 	sub			rdi, 3								;subtract form loop counter
 
 endLoop:
-
 ;calculate loop counter
 add			rcx, rbx
 sub			r10, r9	

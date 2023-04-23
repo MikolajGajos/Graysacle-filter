@@ -1,10 +1,10 @@
-﻿using ProjektJA.Mechanism;
+﻿using MainProg.Mechanism;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing.Imaging;
 using System.Threading.Tasks;
 
-namespace ProjektJA
+namespace MainProg
 {
     internal class GrayScaleManager
     {

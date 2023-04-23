@@ -1,7 +1,7 @@
 ﻿using System.Drawing.Imaging;
 using System.Drawing;
 
-namespace ProjektJA.Mechanism
+namespace MainProg.Mechanism
 {
     internal class BitmapManager
     {

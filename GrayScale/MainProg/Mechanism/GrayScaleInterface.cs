@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ProjektJA.Mechanism
+namespace MainProg.Mechanism
 {
     public abstract class GrayScaleInterface
     {

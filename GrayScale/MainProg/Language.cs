@@ -1,4 +1,4 @@
-﻿namespace ProjektJA
+﻿namespace MainProg
 {
     enum Language
     {
